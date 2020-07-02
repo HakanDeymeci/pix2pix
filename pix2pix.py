@@ -1,0 +1,7 @@
+#libraries
+
+#Generator
+
+#Discriminator
+
+#train
