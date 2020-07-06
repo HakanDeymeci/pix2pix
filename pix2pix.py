@@ -14,12 +14,37 @@ path_to_zip = tf.keras.utils.get_file('cityscapes.tar.gz',
 
 PATH = os.path.join(os.path.dirname(path_to_zip), 'cityscapes/')
 
+#Loader
+
+
+
+
+
+
 #Randomizing
+
+
+
+#crop and resize
+
+#mirroring
+
+#sampling
 
 #Generator
 
+#Generator loss
+
+
+
 #Discriminator
+
+#Discriminator loss
 
 #Optimizers
 
-#train
+
+#Generating images
+
+
+#Training the Gan
