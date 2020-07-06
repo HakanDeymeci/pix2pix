@@ -126,4 +126,3 @@ def fit(train_ds, epochs, test_ds):
 
     print ('Time taken for epoch {} is {} sec\n'.format(epoch + 1,
                                                         time.time()-start))
-  checkpoint.save(file_prefix = checkpoint_prefix)
