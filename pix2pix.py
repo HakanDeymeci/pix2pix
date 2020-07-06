@@ -87,6 +87,17 @@ def randomize(inp, real):
     return inp, real
 #sampling
 
+#Input datasets
+dataset_for_training = tf.data.Dataset.list_files(PATH+'train/*.jpg')
+dataset_for_training = dataset_for_training.map(load_image_train, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+dataset_for_training = dataset_for_training.shuffle(BUFFER_SIZE)
+dataset_for_training = dataset_for_training.batch(BATCH_SIZE)
+
+dataset_for_tests = tf.data.Dataset.list_files(PATH+'val/*.jpg')
+dataset_for_tests = dataset_for_tests.map(load_image_test)
+dataset_for_tests = dataset_for_tests.batch(BATCH_SIZE)
+
+
 #Generator
 
 #Generator loss
@@ -141,4 +152,4 @@ def training_loop(train_ds, epochs, test_ds):
       training(input_image, target, epoch)
     print()
     
-training_loop(train_dataset, NUMBER_OF_EPOCHS, test_dataset)
+training_loop(dataset_for_training, NUMBER_OF_EPOCHS, dataset_for_ests)
