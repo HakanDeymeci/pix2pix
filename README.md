@@ -8,7 +8,7 @@ pix2pix Project Group 1 Hakan, Delight, Dennis, Julien
 3. Decide on Database (Cityscape). 
 
 #### Week 2<br />
-1. Created a template for our GAN
-2. Iplemented subfunctions for randomizing of the data
+1. Created a template for our GAN (decided on Tensorflow for plotting purposes and trying something different)
+2. Implemented subfunctions for randomizing of the data
 3. Implemented the up- and downsampling functions
 4.
