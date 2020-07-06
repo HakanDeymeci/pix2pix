@@ -104,6 +104,8 @@ def randomize(inp, real):
 
 
 #Training the Gan
+NUMBER_OF_EPOCHS = 300
+
 def fit(train_ds, epochs, test_ds):
   for epoch in range(epochs):
     start = time.time()
