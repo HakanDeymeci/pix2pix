@@ -2,6 +2,8 @@
 
 #Import Dataset
 
+#Randomizing
+
 #Generator
 
 #Discriminator
