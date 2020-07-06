@@ -1,4 +1,9 @@
 #libraries
+import tensorflow as tf
+import os
+import time
+from matplotlib import pyplot as plt
+from IPython import display
 
 #Import Dataset
 DATA_URL = 'https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/cityscapes.tar.gz'
