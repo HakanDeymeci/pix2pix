@@ -8,4 +8,6 @@
 
 #Discriminator
 
+#Optimizers
+
 #train
