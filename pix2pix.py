@@ -15,7 +15,24 @@ path_to_zip = tf.keras.utils.get_file('cityscapes.tar.gz',
 PATH = os.path.join(os.path.dirname(path_to_zip), 'cityscapes/')
 
 #Loader
+def load(image_file):
+  image = tf.io.read_file(image_file)
+  image = tf.image.decode_jpeg(image)
 
+  diff = tf.shape(image)[1] // 2
+  real = image[:, :diff, :]
+  inp = image[:,diff:, :]
+
+  inp = tf.cast(inp, tf.float32)
+  real = tf.cast(real, tf.float32)
+
+  return inp, real
+
+#variables
+BUFFER_SIZE = 400
+BATCH_SIZE = 1
+IMG_WIDTH = 256
+IMG_HEIGHT = 256
 
 
 
@@ -27,8 +44,47 @@ PATH = os.path.join(os.path.dirname(path_to_zip), 'cityscapes/')
 
 #crop and resize
 
-#mirroring
+def random_crop(inp, real):
+  stacked_image = tf.stack([inp, real], axis=0)
+  cropped_image = tf.image.random_crop(
+      stacked_image, size=[2, IMG_HEIGHT, IMG_WIDTH, 3])
 
+  return cropped_image[0], cropped_image[1]
+#resize loaded data
+
+def resize(inp, real, height, width):
+  inp = tf.image.resize(inp, [height, width], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+  real = tf.image.resize(real, [height, width], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+
+  return inp, real
+
+
+#normalize data
+def normalize(inp, real):
+  inp = (inp / 127.5) - 1
+  real = (real / 127.5) - 1
+
+  return inp, real
+
+#mirroring
+def mirroring(inp, real):
+    inp = tf.image.flip_left_right(inp)
+    real = tf.image.flip_left_right(real)
+
+    return inp, real
+  
+  @tf.function()
+
+def randomize(inp, real):
+  if tf.random.uniform(()) > 0.5:
+    inp, real = resize(inp, real, 286, 286)
+    inp, real = random_crop(inp, real)
+    inp, real = mirroring(inp, real)
+  else:
+    inp, real = resize(inp, real, 286, 286)
+    inp, real = random_crop(inp, real)
+    
+    return inp, real
 #sampling
 
 #Generator
