@@ -104,3 +104,26 @@ def randomize(inp, real):
 
 
 #Training the Gan
+def fit(train_ds, epochs, test_ds):
+  for epoch in range(epochs):
+    start = time.time()
+
+    display.clear_output(wait=True)
+    print("Epoch: ", epoch)
+
+    # Train
+    for n, (input_image, target) in train_ds.enumerate():
+      if n % 25 == 0:
+        generate_images(generator, example_input, example_target)
+      if (n+1) % 100 == 0:
+        print()
+      train_step(input_image, target, epoch)
+    print()
+
+    # saving (checkpoint) the model every 20 epochs
+    if (epoch + 1) % 20 == 0:
+      checkpoint.save(file_prefix = checkpoint_prefix)
+
+    print ('Time taken for epoch {} is {} sec\n'.format(epoch + 1,
+                                                        time.time()-start))
+  checkpoint.save(file_prefix = checkpoint_prefix)
