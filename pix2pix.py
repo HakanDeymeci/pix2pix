@@ -165,6 +165,23 @@ generator = Generator()
 
 
 #Generating images
+def generate_images(model, test_input, tar):
+  generated_image = model(test_input, training=True)
+  plt.figure(figsize=(22,22))
+
+  display_list = [test_input[0], tar[0], generated_image[0]]
+  titles = ['Input Image', 'Desired Image', 'Generated Image']
+
+  for i in range(3):
+    plt.subplot(1, 3, i+1)
+    plt.title(titles[i])
+    plt.imshow(display_list[i] * 0.5 + 0.5)
+    plt.axis('off')
+  plt.show()
+
+ 
+for example_input, example_target in dataset_for_tests.take(1):
+  generate_images(generator, example_input, example_target)
 
 
 #Training the Gan
