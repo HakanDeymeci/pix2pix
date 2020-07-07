@@ -154,7 +154,16 @@ def get_up_stack():
 generator = Generator()
 
 #Generator loss
+LAMBDA = 100 #Lambda according to paper
+def generator_loss(disc_generated_output, gen_output, target):
+  gan_loss = loss_object(tf.ones_like(disc_generated_output), disc_generated_output)
 
+  # mean absolute error between the generated image and the target image
+  l1_loss = tf.reduce_mean(tf.abs(target - gen_output))
+
+  total_gen_loss = gan_loss + (LAMBDA * l1_loss)
+
+  return total_gen_loss, gan_loss, l1_loss
 
 
 #Discriminator
