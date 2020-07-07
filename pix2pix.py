@@ -99,6 +99,63 @@ dataset_for_tests = dataset_for_tests.batch(BATCH_SIZE)
 
 
 #Generator
+def Generator():
+  inputs = tf.keras.layers.Input(shape=[256,256,3])
+
+  down_stack = get_down_stack()
+
+  up_stack = get_up_stack()
+
+  initializer = tf.random_normal_initializer(0., 0.02)
+  last = tf.keras.layers.Conv2DTranspose(OUTPUT_CHANNELS, 4,
+                                         strides=2,
+                                         padding='same',
+                                         kernel_initializer=initializer,
+                                         activation='tanh') 
+
+  all_inputs = inputs
+
+  skips = []
+  for down in down_stack:
+    all_inputs = down(all_inputs)
+    skips.append(all_inputs)
+
+  skips = reversed(skips[:-1])
+
+  for up, skip in zip(up_stack, skips):
+    all_inputs = up(all_inputs)
+    all_inputs = tf.keras.layers.Concatenate()([all_inputs, skip])
+
+  all_inputs = last(all_inputs)
+
+  return tf.keras.Model(inputs=inputs, outputs=all_inputs)
+
+def get_down_stack():
+  down_stack = [
+    downsample(64, 4, apply_batchnorm=False), 
+    downsample(128, 4), 
+    downsample(256, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+  ]
+  return down_stack
+
+def get_up_stack():
+  up_stack = [
+    upsample(512, 4, apply_dropout=True), 
+    upsample(512, 4, apply_dropout=True), 
+    upsample(512, 4, apply_dropout=True), 
+    upsample(512, 4), 
+    upsample(256, 4), 
+    upsample(128, 4), 
+    upsample(64, 4), 
+  ]
+  return up_stack
+
+generator = Generator()
 
 #Generator loss
 
