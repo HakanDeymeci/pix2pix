@@ -171,8 +171,6 @@ def get_down_stack():
   ]
   return down_stack
 
-generator = Generator()
-
 def get_up_stack():
   up_stack = [
     upsample(512, 4, apply_dropout=True), 
@@ -184,3 +182,5 @@ def get_up_stack():
     upsample(64, 4), 
   ]
   return up_stack
+
+generator = Generator()
