@@ -102,6 +102,10 @@ def load_image_test(image_file):
 
   return input_image, real_image
 
+
+#stacking functions
+
+
 #Input datasets
 dataset_for_training = tf.data.Dataset.list_files(PATH+'train/*.jpg')
 dataset_for_training = dataset_for_training.map(load_image_train, num_parallel_calls=tf.data.experimental.AUTOTUNE)
