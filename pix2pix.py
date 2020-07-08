@@ -4,6 +4,8 @@ import time
 from matplotlib import pyplot as plt
 from IPython import display
 
+
+#Dataloader
 DATA_URL = 'https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/cityscapes.tar.gz'
 
 path_to_zip = tf.keras.utils.get_file('cityscapes.tar.gz',
@@ -31,6 +33,8 @@ def load(image_file):
   return inp, real
 
 inp, re = load(PATH+'train/100.jpg')
+
+#resizing for random jittering and mirroring 
 
 def resize(inp, real, height, width):
   inp = tf.image.resize(inp, [height, width], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
@@ -185,6 +189,7 @@ def get_up_stack():
 
 generator = Generator()
 
+#generator loss with mean absolute error (according to paper)
 
 LAMBDA = 100
 
@@ -266,6 +271,7 @@ def generate_images(model, test_input, tar):
 for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
   
+#training
 EPOCHS = 300
 
 def training(input_image, target, epoch):
