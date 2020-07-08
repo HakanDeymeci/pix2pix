@@ -263,10 +263,10 @@ def generate_images(model, test_input, tar):
     plt.axis('off')
   plt.show()
   
-  for example_input, example_target in dataset_for_tests.take(1):
+for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
   
-EPOCHS = 150
+EPOCHS = 300
 
 def training(input_image, target, epoch):
   with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
@@ -288,7 +288,7 @@ def training(input_image, target, epoch):
   discriminator_optimizer.apply_gradients(zip(discriminator_gradients,
                                               discriminator.trainable_variables))
   
-  def training_loop(train_ds, epochs, test_ds):
+def training_loop(train_ds, epochs, test_ds):
   for epoch in range(epochs):
 
     display.clear_output(wait=True)
