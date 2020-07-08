@@ -28,6 +28,8 @@ def load(image_file):
 
   return inp, real
 
+inp, re = load(PATH+'train/100.jpg')
+
 #variables
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
@@ -85,7 +87,20 @@ def randomize(inp, real):
     inp, real = random_crop(inp, real)
     
     return inp, real
-#sampling
+
+def load_image_train(image_file):
+  input_image, real_image = load(image_file)
+  input_image, real_image = randomize(input_image, real_image)
+  input_image, real_image = normalize(input_image, real_image)
+
+  return input_image, real_image
+
+def load_image_test(image_file):
+  input_image, real_image = load(image_file)
+  input_image, real_image = resize(input_image, real_image, IMG_HEIGHT, IMG_WIDTH)
+  input_image, real_image = normalize(input_image, real_image)
+
+  return input_image, real_image
 
 #Input datasets
 dataset_for_training = tf.data.Dataset.list_files(PATH+'train/*.jpg')
@@ -155,6 +170,7 @@ generator = Generator()
 
 #Generator loss
 LAMBDA = 100 #Lambda according to paper
+
 def generator_loss(disc_generated_output, gen_output, target):
   gan_loss = loss_object(tf.ones_like(disc_generated_output), disc_generated_output)
 
