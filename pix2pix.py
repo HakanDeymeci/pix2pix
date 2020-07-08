@@ -116,6 +116,38 @@ dataset_for_tests = tf.data.Dataset.list_files(PATH+'val/*.jpg')
 dataset_for_tests = dataset_for_tests.map(load_image_test)
 dataset_for_tests = dataset_for_tests.batch(BATCH_SIZE)
 
+#sampling
+OUTPUT_CHANNELS = 3
+bias = False
+
+def downsample(filters, size, apply_batchnorm=True):
+
+  result = tf.keras.Sequential()
+  result.add(
+      tf.keras.layers.Conv2D(filters, size, strides=2, padding='same',
+                             kernel_initializer=tf.random_normal_initializer(0., 0.03), use_bias=False))
+  if apply_batchnorm:
+    result.add(tf.keras.layers.BatchNormalization())
+    result.add(tf.keras.layers.LeakyReLU())
+    return result
+  else:
+    result.add(tf.keras.layers.LeakyReLU())
+  return result
+
+def upsample(filters, size, apply_dropout=False):
+  result = tf.keras.Sequential()
+  result.add(
+    tf.keras.layers.Conv2DTranspose(filters, size, strides=2,
+                                    padding='same',kernel_initializer=tf.random_normal_initializer(0., 0.03),use_bias=False))
+  result.add(tf.keras.layers.BatchNormalization())
+
+  if apply_dropout:
+      result.add(tf.keras.layers.Dropout(0.5))
+      result.add(tf.keras.layers.ReLU())
+      return result
+  else:
+    result.add(tf.keras.layers.ReLU())
+    return result
 
 #Generator
 def Generator():
