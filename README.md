@@ -21,3 +21,26 @@ Here is a Link where you can run our code on Google Colab. Just click on the lin
 
 ## Overview of the Pix2Pix GAN
 The Pix2Pix GAN is a Generative Adversarial Network. It performs image to image translation. The main parts are a Discriminator, a Generator and a dataset. In our case the dataset contains real images of cityscapes and sketches of cityscapes. The main goal of the GAN is that the Generator should produce fake images coming form the sketched images that can’t be differentiated with real images by the Discriminator. In other words: The Generator should make the Discriminator think that it is always getting real images even if they are generated. 
+
+# Explanation of our Code 
+We start with importing the dependencies we need for our GAN.
+## Imports
+```
+import tensorflow as tf
+import os
+import time
+from matplotlib import pyplot as plt
+from IPython import display
+```
+## Dataset
+We are using a dataset that contains images of real cityscapes and images of sketched cityscapes that are sized 256 x 256.
+```
+DATA_URL = 'https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/cityscapes.tar.gz'
+
+path_to_zip = tf.keras.utils.get_file('cityscapes.tar.gz',
+                                      origin=DATA_URL,
+                                      extract=True)
+
+PATH = os.path.join(os.path.dirname(path_to_zip), 'cityscapes/')
+
+
