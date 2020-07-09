@@ -2,17 +2,56 @@
 pix2pix Project Group 1 Hakan, Delight, Dennis, Julien
 
 # Documentation<br />
-#### Week 1<br />
+### Week 1<br />
 1. Created new Github Repository. 
 2. Research pix2pix and read origincal paper.
 3. Decide on Database (Cityscape). 
 
-#### Week 2<br />
+####  Daily updates<br />
+#29.06.2020<br />
+Made our first meeting for the new Project "pix2pix".<br />
+We decided to use the first week for some research about how the
+pix2pix GAN works and how we can implement it.<br />
+Whats new?<br />
+- created the repository "pix2pix"<br />
+- searched for some datasets<br />
+
+#02.07.2020<br />
+Added a new file to the repository with an overall shape of the GAN.<br />
+
+
+#06.07.2020<br />
+After the first week we gathered again and pooled together our results from the research.<br />
+We were able to start writing the code on the same day.<br />
+We made a more detailed template for the pix2pix <br />
+Whats new?<br />
+- added libraries and dataloader<br />
+- added the code-snippet for the training<br />
+
+### Week 2<br />
 1. Created a template for our GAN (decided on Tensorflow for plotting purposes and trying something different)
 2. Implemented subfunctions for randomizing of the data
 3. Implemented the up- and downsampling functions
 
-#### Week 3<br />
+####  Daily updates<br />
+
+#07.07.2020<br />
+The next day we worked on the Generator and its loss function.<br />
+We also implemented the function to draw the input and output data.<br />
+
+
+#08.07.2020<br />
+On this day we were able to implement the rest of the code and get a fully working pix2pix GAN.<br />
+After finishing the python code, we noticed some runtime issues with the code and tried implementing the code as an ipynb Notebook file. With the notebook file we were able to achive a faster working GAN. <br />
+Whats new?<br />
+- added sampling methods<br />
+- adjusted the Generator<br />
+- implemented the Discriminator, Loss function and Optimizers<br />
+- started on implementing a notebook OurPix2Pix.ipynb<br />
+
+#09.07.2020<br />
+updated the notebook 
+### Week 3<br />
 1. Implemented Generator/Discriminator
 2. Implement training functions
 
