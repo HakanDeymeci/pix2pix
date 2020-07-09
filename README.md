@@ -193,3 +193,198 @@ def upsample(filters, size, apply_dropout=False):
     result.add(tf.keras.layers.ReLU())
     return result
 ```
+## Generator 
+The Generators goal is to learn how to create fake images that are not distinguishable of real images by the Discriminator. The structure of the Generator is similar to the structure of the Discriminator. 
+```
+def Generator():
+  inputs = tf.keras.layers.Input(shape=[256,256,3])
+
+  down_stack = get_down_stack()
+
+  up_stack = get_up_stack()
+
+  initializer = tf.random_normal_initializer(0., 0.02)
+  last = tf.keras.layers.Conv2DTranspose(OUTPUT_CHANNELS, 4,
+                                         strides=2,
+                                         padding='same',
+                                         kernel_initializer=initializer,
+                                         activation='tanh') 
+
+  all_inputs = inputs
+
+  skips = []
+  for down in down_stack:
+    all_inputs = down(all_inputs)
+    skips.append(all_inputs)
+
+  skips = reversed(skips[:-1])
+
+  for up, skip in zip(up_stack, skips):
+    all_inputs = up(all_inputs)
+    all_inputs = tf.keras.layers.Concatenate()([all_inputs, skip])
+
+  all_inputs = last(all_inputs)
+
+  return tf.keras.Model(inputs=inputs, outputs=all_inputs)
+
+def get_down_stack():
+  down_stack = [
+    downsample(64, 4, apply_batchnorm=False), 
+    downsample(128, 4), 
+    downsample(256, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+    downsample(512, 4), 
+  ]
+  return down_stack
+
+def get_up_stack():
+  up_stack = [
+    upsample(512, 4, apply_dropout=True), 
+    upsample(512, 4, apply_dropout=True), 
+    upsample(512, 4, apply_dropout=True), 
+    upsample(512, 4), 
+    upsample(256, 4), 
+    upsample(128, 4), 
+    upsample(64, 4), 
+  ]
+  return up_stack
+```
+```
+generator = Generator()
+```
+## Generator Loss
+```
+def generator_loss(disc_generated_output, gen_output, target):
+  gan_loss = loss_object(tf.ones_like(disc_generated_output), disc_generated_output)
+
+  l1_loss = tf.reduce_mean(tf.abs(target - gen_output))
+
+  total_gen_loss = gan_loss + (LAMBDA * l1_loss)
+
+  return total_gen_loss, gan_loss, l1_loss
+```
+## Discriminator
+```
+def Discriminator():
+
+  inp = tf.keras.layers.Input(shape=[256, 256, 3], name='input_image')
+  tar = tf.keras.layers.Input(shape=[256, 256, 3], name='target_image')
+
+  x = tf.keras.layers.concatenate([inp, tar]) # (bs, 256, 256, channels*2)
+
+
+  e = 0
+  d= 64
+  while e in range(0,3):
+    if e==0:
+      down = downsample(d, 4, False)(x)
+      d=d*2
+    else:down = downsample(d, 4)(down)
+    d=d*2
+    e += 1
+
+
+  zero_pad1 = tf.keras.layers.ZeroPadding2D()(down) # (bs, 34, 34, 256)
+  conv = tf.keras.layers.Conv2D(512, 4, strides=1,
+                                kernel_initializer=tf.random_normal_initializer(0., 0.03),
+                                use_bias=False)(zero_pad1) # (bs, 31, 31, 512)
+
+  batchnorm1 = tf.keras.layers.BatchNormalization()(conv)
+
+  leaky_relu = tf.keras.layers.LeakyReLU()(batchnorm1)
+
+  zero_pad2 = tf.keras.layers.ZeroPadding2D()(leaky_relu) # (bs, 33, 33, 512)
+
+  last = tf.keras.layers.Conv2D(1, 4, strides=1,
+                                kernel_initializer=tf.random_normal_initializer(0., 0.03))(zero_pad2) # (bs, 30, 30, 1)
+                                
+  return tf.keras.Model(inputs=[inp, tar], outputs=last)
+```
+```
+discriminator = Discriminator()
+```
+```
+loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+```
+## Discriminator Loss
+```
+def discriminator_loss(disc_real_output, disc_generated_output):
+  real_loss = loss_object(tf.ones_like(disc_real_output), disc_real_output)
+
+  generated_loss = loss_object(tf.zeros_like(disc_generated_output), disc_generated_output)
+
+  total_disc_loss = real_loss + generated_loss
+
+  return total_disc_loss
+```
+## Optimizers
+```
+generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
+discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
+```
+## Generating the Images
+```
+def generate_images(model, test_input, tar):
+  generated_image = model(test_input, training=True)
+  plt.figure(figsize=(22,22))
+
+  display_list = [test_input[0], tar[0], generated_image[0]]
+  titles = ['Input Image', 'Real Image', 'Generated Image']
+
+  for i in range(3):
+    plt.subplot(1, 3, i+1)
+    plt.title(titles[i])
+    plt.imshow(display_list[i] * 0.5 + 0.5)
+    plt.axis('off')
+  plt.show()
+```
+```
+for example_input, example_target in dataset_for_tests.take(1):
+  generate_images(generator, example_input, example_target)
+```
+## Training the Discriminator
+```
+EPOCHS = 150
+def training(input_image, target, epoch):
+  with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+    gen_output = generator(input_image, training=True)
+
+    disc_real_output = discriminator([input_image, target], training=True)
+    disc_generated_output = discriminator([input_image, gen_output], training=True)
+
+    gen_total_loss, gen_gan_loss, gen_l1_loss = generator_loss(disc_generated_output, gen_output, target)
+    disc_loss = discriminator_loss(disc_real_output, disc_generated_output)
+
+  generator_gradients = gen_tape.gradient(gen_total_loss,
+                                          generator.trainable_variables)
+  discriminator_gradients = disc_tape.gradient(disc_loss,
+                                               discriminator.trainable_variables)
+
+  generator_optimizer.apply_gradients(zip(generator_gradients,
+                                          generator.trainable_variables))
+  discriminator_optimizer.apply_gradients(zip(discriminator_gradients,
+                                              discriminator.trainable_variables))
+```
+```
+def training_loop(train_ds, epochs, test_ds):
+  for epoch in range(epochs):
+
+    #display.clear_output(wait=True)
+    print("Epoch: ", epoch)
+
+    # Train
+    for n, (input_image, target) in train_ds.enumerate():
+      if n % 250 == 0:
+        generate_images(generator, example_input, example_target)
+      if (n+1) % 100 == 0:
+        print()
+      training(input_image, target, epoch)
+    print()
+```
+```
+training_loop(dataset_for_training, EPOCHS, dataset_for_tests)
+
+
