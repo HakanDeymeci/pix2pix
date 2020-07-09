@@ -99,7 +99,7 @@ def mirroring(inp, real):
 
     return inp, real
 ```
-### Randomizing
+### Randomize
 The randomize function applies the three described function form before.
 ```
 @tf.function()
