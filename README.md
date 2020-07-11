@@ -67,6 +67,9 @@ Here is a Link where you can run our code on Google Colab. Just click on the lin
 The Pix2Pix GAN is a Generative Adversarial Network. It performs image to image translation. The main parts are a Discriminator, a Generator and a dataset. In our case the dataset contains real images of cityscapes and sketches of cityscapes. The main goal of the GAN is that the Generator should produce fake images coming form the sketched images that can’t be differentiated with real images by the Discriminator. In other words: The Generator should make the Discriminator think that it is always getting real images even if they are generated.
 
 <img src="pix2pix architecture.PNG">
+x is the given sketch of a picture.<br />
+y is the real picture <br />
+
 
 # Explanation of our Code 
 ## Imports
