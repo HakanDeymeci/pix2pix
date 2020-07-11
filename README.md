@@ -51,6 +51,11 @@ Whats new?<br />
 
 #09.07.2020<br />
 updated the notebook 
+
+#11.07.2020<br />
+- added Discriminator and loss function to notebook
+- added function to display the inputs and outputs 
+
 ### Week 3<br />
 1. Implemented Generator/Discriminator
 2. Implement training functions
