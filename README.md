@@ -201,12 +201,12 @@ dataset_for_tests = tf.data.Dataset.list_files(PATH+'val/*.jpg')
 dataset_for_tests = dataset_for_tests.map(load_image_test)
 dataset_for_tests = dataset_for_tests.batch(BATCH_SIZE)
 ```
+## Sampling
+After loading test and train data the images are getting downsampled to a bottleneck and upsampled to an output picture.
 ```
 OUTPUT_CHANNELS = 3
 bias = False
 ```
-## Sampling
-After loading test and train data the images are getting downsampled to a bottleneck and upsampled to an output picture.
 ```
 def downsample(filters, size, apply_batchnorm=True):
 
