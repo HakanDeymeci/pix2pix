@@ -401,6 +401,8 @@ for example_input, example_target in dataset_for_tests.take(1):
 For each example input there is a generated output. The discriminator receives an input_image and the generated image as first input. Moving on the second input is the input_image and the target_image. Furthermore we define how many epochs our GAN should pass.
 ```
 EPOCHS = 150
+```
+```
 def training(input_image, target, epoch):
   with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
     gen_output = generator(input_image, training=True)
@@ -427,13 +429,20 @@ The training loop iterates over the number of epochs we definded in the section 
 def training_loop(train_ds, epochs, test_ds):
   for epoch in range(epochs):
 
-    #display.clear_output(wait=True)
     print("Epoch: ", epoch)
 
-    # Train
     for n, (input_image, target) in train_ds.enumerate():
-      if n % 250 == 0:
+      if n % 500 == 0:
+        gen_output = generator(input_image, training=True)
+        disc_real_output = discriminator([input_image, target], training=True)
+        disc_generated_output = discriminator([input_image, gen_output], training=True)
+        disc_loss = discriminator_loss(disc_real_output, disc_generated_output)
         generate_images(generator, example_input, example_target)
+        gen_total_loss, gen_gan_loss, gen_l1_loss = generator_loss(disc_generated_output, gen_output, target)
+        
+        print("Discriminator Loss: ",disc_loss)
+        print("Generator Loss: ",gen_total_loss)
+        
       if (n+1) % 100 == 0:
         print()
       training(input_image, target, epoch)
