@@ -89,7 +89,7 @@ path_to_zip = tf.keras.utils.get_file('cityscapes.tar.gz',
 
 PATH = os.path.join(os.path.dirname(path_to_zip), 'cityscapes/')
 ```
-```
+``
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
 IMG_WIDTH = 256
