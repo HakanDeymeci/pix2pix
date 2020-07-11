@@ -170,7 +170,7 @@ def normalize(inp, real):
   return inp, real
 ```
 ## Load train and test data
-Moving on we loaded the images of our dataset.
+After normalizing our images we loaded the images of our dataset.
 ```
 def load_image_train(image_file):
   input_image, real_image = load(image_file)
@@ -239,6 +239,7 @@ def upsample(filters, size, apply_dropout=False):
     return result
 ```
 ## Generator 
+Next up the generator tries to generate pictures that look like real images that fool the discriminator.
 ```
 def Generator():
   inputs = tf.keras.layers.Input(shape=[256,256,3])
@@ -311,6 +312,7 @@ def generator_loss(disc_generated_output, gen_output, target):
   return total_gen_loss, gan_loss, l1_loss
 ```
 ## Discriminator
+Moving on the discriminators goal is to distinguish between real and fake images.
 ```
 def Discriminator():
 
@@ -370,6 +372,7 @@ generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
 discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
 ```
 ## Generating the Images
+Finally this function plots the predictions. Images from the dataset are passed to the generator and it will translate the input image to an output image.
 ```
 def generate_images(model, test_input, tar):
   generated_image = model(test_input, training=True)
@@ -390,7 +393,7 @@ for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
 ```
 ## Training the Discriminator
-For each example input there is a generated output. The discriminator receives an input_image and the generated image as first input. Moving on the second input is the input_image and the target_image.
+For each example input there is a generated output. The discriminator receives an input_image and the generated image as first input. Moving on the second input is the input_image and the target_image. Furthermore we define how many epochs our GAN should pass.
 ```
 EPOCHS = 150
 def training(input_image, target, epoch):
