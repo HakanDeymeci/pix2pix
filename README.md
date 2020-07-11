@@ -67,8 +67,8 @@ Here is a Link where you can run our code on Google Colab. Just click on the lin
 The Pix2Pix GAN is a Generative Adversarial Network. It performs image to image translation. The main parts are a Discriminator, a Generator and a dataset. In our case the dataset contains real images of cityscapes and sketches of cityscapes. The main goal of the GAN is that the Generator should produce fake images coming form the sketched images that can’t be differentiated with real images by the Discriminator. In other words: The Generator should make the Discriminator think that it is always getting real images even if they are generated. 
 
 # Explanation of our Code 
-We start with importing the dependencies we need for our GAN.
 ## Imports
+We start with importing the dependencies we need for our GAN.
 ```
 import tensorflow as tf
 import os
@@ -113,7 +113,7 @@ def load(image_file):
 inp, re = load(PATH+'train/100.jpg')
 ```
 ## Randomizing
-The randomizing section contains three functions that are getting applied by the randomize() function.
+The randomizing section contains three randomize functions that are getting applied by the randomize() function.
 ### Resize
 Here the input and real images can be resizes with a given height and width.
 ```
@@ -144,7 +144,7 @@ def mirroring(inp, real):
     return inp, real
 ```
 ### Randomize
-The randomize function applies the three described function form before.
+The randomize() function applies the three described function from before.
 ```
 @tf.function()
 def randomize(inp, real):
@@ -161,7 +161,7 @@ def randomize(inp, real):
     return inp, real
 ```
 ## Normalize
-The values of the dataset images are between 0 and 255 so we normailzed them to numbers between -1 and 1.
+Moving on the values of the dataset images are between 0 and 255 so we normailzed them to numbers between -1 and 1.
 ```
 def normalize(inp, real):
   inp = (inp / 127.5) - 1
@@ -206,6 +206,7 @@ OUTPUT_CHANNELS = 3
 bias = False
 ```
 ## Sampling
+After loading test and train data the images are getting downsampled to a bottleneck and upsampled to an output picture.
 ```
 def downsample(filters, size, apply_batchnorm=True):
 
@@ -238,7 +239,6 @@ def upsample(filters, size, apply_dropout=False):
     return result
 ```
 ## Generator 
-The Generators goal is to learn how to create fake images that are not distinguishable of real images by the Discriminator. The structure of the Generator is similar to the structure of the Discriminator. 
 ```
 def Generator():
   inputs = tf.keras.layers.Input(shape=[256,256,3])
@@ -390,6 +390,7 @@ for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
 ```
 ## Training the Discriminator
+For each example input there is a generated output. The discriminator receives an input_image and the generated image as first input. Moving on the second input is the input_image and the target_image.
 ```
 EPOCHS = 150
 def training(input_image, target, epoch):
@@ -412,6 +413,8 @@ def training(input_image, target, epoch):
   discriminator_optimizer.apply_gradients(zip(discriminator_gradients,
                                               discriminator.trainable_variables))
 ```
+### Training Loop
+The training loop iterates over the number of epochs we definded in the section above. It ouputs the progress of each epoch so it is comprehensible what happened during the pass.
 ```
 def training_loop(train_ds, epochs, test_ds):
   for epoch in range(epochs):
@@ -430,5 +433,7 @@ def training_loop(train_ds, epochs, test_ds):
 ```
 ```
 training_loop(dataset_for_training, EPOCHS, dataset_for_tests)
+```
+
 
 
