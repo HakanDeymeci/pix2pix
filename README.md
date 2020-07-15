@@ -67,8 +67,8 @@ Here is a Link where you can run our code on Google Colab. Just click on the lin
 The Pix2Pix GAN is a Generative Adversarial Network. It performs image to image translation. The main parts are a Discriminator, a Generator and a dataset. In our case the dataset contains real images of cityscapes and sketches of cityscapes. The main goal of the GAN is that the Generator should produce fake images coming form the sketched images that can’t be differentiated with real images by the Discriminator. In other words: The Generator should make the Discriminator think that it is always getting real images even if they are generated.
 
 <img src="pix2pix architecture.PNG">
-x is the given sketch of a picture.<br />
-y is the real picture <br />
+x is the given sketch of a image.<br />
+y is the real image <br />
 
 
 # Explanation of our Code 
@@ -207,7 +207,7 @@ dataset_for_tests = dataset_for_tests.map(load_image_test)
 dataset_for_tests = dataset_for_tests.batch(BATCH_SIZE)
 ```
 ## Sampling
-After loading test and train data the images are getting downsampled to a bottleneck and upsampled to an output picture.
+After loading test and train data the images are getting downsampled to a bottleneck and upsampled to an output image.
 ```
 OUTPUT_CHANNELS = 3
 bias = False
@@ -244,7 +244,7 @@ def upsample(filters, size, apply_dropout=False):
     return result
 ```
 ## Generator 
-Next up the generator tries to generate pictures that look like real images that fool the discriminator.
+Next up the generator tries to generate images that look like real images that fool the discriminator.
 ```
 def Generator():
   inputs = tf.keras.layers.Input(shape=[256,256,3])
@@ -451,6 +451,8 @@ def training_loop(train_ds, epochs, test_ds):
 ```
 training_loop(dataset_for_training, EPOCHS, dataset_for_tests)
 ```
+# Progress of our Pix2Pix GAN
+In the following GIF we visualized the progress of the the GAN from epoch 0 to epoch 80. The generated image is getting better and better...
 
-
+<img src="Pix2PixProgress">
 
