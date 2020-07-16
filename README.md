@@ -96,7 +96,7 @@ PATH = os.path.join(os.path.dirname(path_to_zip), 'cityscapes/')
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
 IMG_WIDTH = 256
-IMG_HEIGHT = 25
+IMG_HEIGHT = 256
 ```
 ## Loader
 Next the load function loads and decodes the images of the dataset we defined before.
