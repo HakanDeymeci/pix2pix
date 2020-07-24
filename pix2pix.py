@@ -295,6 +295,8 @@ def training(input_image, target, epoch):
                                               discriminator.trainable_variables))
   
 def training_loop(train_ds, epochs, test_ds):
+  # initialize stores for loss values
+  
   for epoch in range(epochs):
 
     
@@ -311,6 +313,7 @@ def training_loop(train_ds, epochs, test_ds):
         gen_total_loss, gen_gan_loss, gen_l1_loss = generator_loss(disc_generated_output, gen_output, target)
         print("Discriminator Loss: ",disc_loss)
         print("Generator Loss: ",gen_total_loss)
+        # accumulate loss values
       if (n+1) % 100 == 0:
         print()
       training(input_image, target, epoch)
