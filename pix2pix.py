@@ -270,10 +270,9 @@ def generate_images(model, test_input, tar):
   
 # implement function for loss visualization
 def generate_images_loss(d,g):
-  plt.figure(figsize=(5,5))
-  titles = ['Discriminator Loss', 'Generator Loss']
-  plt.plot(d)
-  plt.plot(g)
+  plt.figure(figsize=(6,6))
+  plt.plot(d, '.-')
+  plt.plot(g, '.-')
   plt.show()
   
 for example_input, example_target in dataset_for_tests.take(1):
