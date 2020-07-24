@@ -296,6 +296,8 @@ def training(input_image, target, epoch):
   
 def training_loop(train_ds, epochs, test_ds):
   # initialize stores for loss values
+  d_loss = []
+  g_loss = []
   
   for epoch in range(epochs):
 
@@ -314,6 +316,8 @@ def training_loop(train_ds, epochs, test_ds):
         print("Discriminator Loss: ",disc_loss)
         print("Generator Loss: ",gen_total_loss)
         # accumulate loss values
+        d_loss.append(disc_loss.numpy())
+        g_loss.append(gen_total_loss.numpy())
       if (n+1) % 100 == 0:
         print()
       training(input_image, target, epoch)
