@@ -60,6 +60,9 @@ updated the notebook
 1. Implemented Generator/Discriminator
 2. Implement training functions
 
+### Week 4<br />
+- added loss statstics for visualization
+
 ## Run Pix2Pix GAN on Google Colab (The simple way)
 Here is a Link where you can run our code on Google Colab. Just click on the link and press "run all". [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/HakanDeymeci/pix2pix/blob/master/OurPix2Pix.ipynb)
 
