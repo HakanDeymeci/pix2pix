@@ -268,8 +268,11 @@ def generate_images(model, test_input, tar):
     plt.axis('off')
   plt.show()
   
+# implement function for loss visualization
+  
 for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
+  # add function for loss visualization
   
 #training
 EPOCHS = 300
