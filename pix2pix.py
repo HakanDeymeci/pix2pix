@@ -269,10 +269,15 @@ def generate_images(model, test_input, tar):
   plt.show()
   
 # implement function for loss visualization
+def generate_images_loss(d,g):
+  plt.figure(figsize=(5,5))
+  titles = ['Discriminator Loss', 'Generator Loss']
+  plt.plot(d)
+  plt.plot(g)
+  plt.show()
   
 for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
-  # add function for loss visualization
   
 #training
 EPOCHS = 300
@@ -321,6 +326,7 @@ def training_loop(train_ds, epochs, test_ds):
         # accumulate loss values
         d_loss.append(disc_loss.numpy())
         g_loss.append(gen_total_loss.numpy())
+        generate_images_losses(d_loss,g_loss)
       if (n+1) % 100 == 0:
         print()
       training(input_image, target, epoch)
