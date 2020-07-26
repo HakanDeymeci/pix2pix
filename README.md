@@ -479,7 +479,7 @@ In the following GIF we visualized the progress of the the GAN from epoch 0 to e
 
 <img src="Pix2PixProgress">
 
-# Visualizatiob of Loss Values
+# Visualization of Loss Values
 The following graph visualizes loss values of both discriminator and generator. Each tick evaluates a batch of data, six ticks resemble an epoch.
 Here, data is evualated for 20 epochs, resutling in 120 ticks. Clearly the loss values of the discriminator differ much less as the loss values from the generator, as they are much higher as well. 
 
