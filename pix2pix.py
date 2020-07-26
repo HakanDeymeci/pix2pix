@@ -284,7 +284,7 @@ for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
   
 #training
-EPOCHS = 300
+EPOCHS = 80
 
 def training(input_image, target, epoch):
   with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
