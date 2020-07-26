@@ -268,6 +268,18 @@ def generate_images(model, test_input, tar):
     plt.axis('off')
   plt.show()
   
+# implement function for loss visualization
+def generate_images_loss(d,g):
+  fig, ax = plt.subplots(figsize=(14,10))
+  l1 = ax.plot(g, '.-', label='Generator Loss')
+  l2 = ax.plot(d, '.-', label='Discriminator Loss')
+  plt.xlabel('6 ticks per Epoch')
+  plt.ylabel('Loss')
+  plt.xticks()
+  plt.title('Loss of Discriminator / Generator')
+  legend = ax.legend(loc='upper center')
+  plt.show()
+  
 for example_input, example_target in dataset_for_tests.take(1):
   generate_images(generator, example_input, example_target)
   
@@ -295,6 +307,10 @@ def training(input_image, target, epoch):
                                               discriminator.trainable_variables))
   
 def training_loop(train_ds, epochs, test_ds):
+  # initialize stores for loss values
+  d_loss = []
+  g_loss = []
+  
   for epoch in range(epochs):
 
     
@@ -311,6 +327,10 @@ def training_loop(train_ds, epochs, test_ds):
         gen_total_loss, gen_gan_loss, gen_l1_loss = generator_loss(disc_generated_output, gen_output, target)
         print("Discriminator Loss: ",disc_loss)
         print("Generator Loss: ",gen_total_loss)
+        # accumulate loss values
+        d_loss.append(disc_loss.numpy())
+        g_loss.append(gen_total_loss.numpy())
+        generate_images_losses(d_loss,g_loss)
       if (n+1) % 100 == 0:
         print()
       training(input_image, target, epoch)

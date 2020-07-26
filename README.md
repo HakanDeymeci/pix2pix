@@ -60,6 +60,9 @@ updated the notebook
 1. Implemented Generator/Discriminator
 2. Implement training functions
 
+### Week 4<br />
+- added loss statistics for visualization
+
 ## Run Pix2Pix GAN on Google Colab (The simple way)
 Here is a Link where you can run our code on Google Colab. Just click on the link and press "run all". [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/HakanDeymeci/pix2pix/blob/master/OurPix2Pix.ipynb)
 
@@ -392,6 +395,18 @@ def generate_images(model, test_input, tar):
     plt.imshow(display_list[i] * 0.5 + 0.5)
     plt.axis('off')
   plt.show()
+  
+# implement function for loss visualization
+def generate_images_loss(d,g):
+  fig, ax = plt.subplots(figsize=(14,10))
+  l1 = ax.plot(g, '.-', label='Generator Loss')
+  l2 = ax.plot(d, '.-', label='Discriminator Loss')
+  plt.xlabel('6 ticks per Epoch')
+  plt.ylabel('Loss')
+  plt.xticks()
+  plt.title('Loss of Discriminator / Generator')
+  legend = ax.legend(loc='upper center')
+  plt.show()
 ```
 ```
 for example_input, example_target in dataset_for_tests.take(1):
@@ -427,6 +442,10 @@ def training(input_image, target, epoch):
 The training loop iterates over the number of epochs we definded in the section above. It ouputs the progress of each epoch so it is comprehensible what happened during the pass.
 ```
 def training_loop(train_ds, epochs, test_ds):
+  # initialize stores for loss values
+  d_loss = []
+  g_loss = []
+  
   for epoch in range(epochs):
 
     print("Epoch: ", epoch)
@@ -442,6 +461,10 @@ def training_loop(train_ds, epochs, test_ds):
         
         print("Discriminator Loss: ",disc_loss)
         print("Generator Loss: ",gen_total_loss)
+        # accumulate loss values
+        d_loss.append(disc_loss.numpy())
+        g_loss.append(gen_total_loss.numpy())
+        generate_images_loss(d_loss,g_loss)
         
       if (n+1) % 100 == 0:
         print()
@@ -455,4 +478,10 @@ training_loop(dataset_for_training, EPOCHS, dataset_for_tests)
 In the following GIF we visualized the progress of the the GAN from epoch 0 to epoch 80. The generated image is getting better and better...
 
 <img src="Pix2PixProgress">
+
+# Visualizatiob of Loss Values
+The following graph visualizes loss values of both discriminator and generator. Each tick evaluates a batch of data, six ticks resemble an epoch.
+Here, data is evualated for 20 epochs, resutling in 120 ticks. Clearly the loss values of the discriminator differ much less as the loss values from the generator, as they are much higher as well. 
+
+<img src="loss_values_20_epochs.png">
 
